@@ -1,0 +1,36 @@
+{
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/signup",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/lesson/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/assessment/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/student/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/teacher/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/parent/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/link/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

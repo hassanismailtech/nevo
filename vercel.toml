@@ -1,0 +1,11 @@
+# Vercel configuration for Nevo frontend
+[rewrite]
+  # Allow direct access to API routes (e.g., /login, /signup, etc.)
+  source = "/(signup|login|lesson|assessment|student|parent|teacher|link|connections|api|static|public|favicon.ico|robots.txt|manifest.json|service-worker.js|_next|.*\.js|.*\.css|.*\.png|.*\.jpg|.*\.svg|.*\.ico)"
+  destination = "/api/$1"
+
+[redirect]
+  # Fallback: all other routes go to index.html for SPA
+  source = "/(.*)"
+  destination = "/index.html"
+  status = 200

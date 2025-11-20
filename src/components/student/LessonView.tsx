@@ -243,7 +243,7 @@ export function LessonView() {
 
                       <div className="grid gap-3">
                         {slide.question.options.map((option, index) => (
-                          <button
+                          <button title="Go to next slide"
                             key={index}
                             onClick={() => handleAnswerSelect(index)}
                             disabled={showFeedback}

@@ -148,7 +148,7 @@ export function SignupPage() {
               <Label htmlFor="role" className="text-sm font-semibold text-[#111827]">I am a...</Label>
               <div className="relative">
                 <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF] pointer-events-none z-10" />
-                <select
+                <select title="Select your role"
                   id="role"
                   className="w-full pl-12 pr-4 h-12 text-base rounded-xl border-2 border-gray-200 bg-white focus:outline-none focus:border-[#4F46E5] transition-colors appearance-none cursor-pointer"
                   value={formData.role}

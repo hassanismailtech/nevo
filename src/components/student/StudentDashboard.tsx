@@ -20,6 +20,13 @@ export function StudentDashboard() {
   const [totalXP] = useState(215);
   const [streak] = useState(7);
 
+  // --- Class Feature State ---
+  const [classTab, setClassTab] = useState(false);
+  const [classLessons, setClassLessons] = useState([]);
+  const [classChat, setClassChat] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [classmates, setClassmates] = useState([]);
+
   useEffect(() => {
     // MOCK DATA: Replace API calls with detailed, realistic mock data
     setIsLoading(true);
@@ -219,6 +226,39 @@ export function StudentDashboard() {
     }, 800);
   }, [assessmentData, setAssessmentData, currentUser]);
 
+  // Load class data from localStorage or mock
+  useEffect(() => {
+    let lessons = localStorage.getItem('student_class_lessons');
+    let chat = localStorage.getItem('student_class_chat');
+    let mates = localStorage.getItem('student_classmates');
+    setClassLessons(lessons ? JSON.parse(lessons) : [
+      { id: 'l1', title: 'Decimals & Percentages', uploadedBy: 'Teacher', date: '2 days ago' },
+      { id: 'l2', title: 'Plant Life Cycles', uploadedBy: 'Teacher', date: '5 days ago' },
+    ]);
+    setClassChat(chat ? JSON.parse(chat) : [
+      { sender: 'Amina Yusuf', message: 'Can someone explain slide 3 of the lesson?', time: '10:05' },
+      { sender: 'Teacher', message: 'Sure! Slide 3 covers the basics of decimals. Let me break it down...', time: '10:07' },
+    ]);
+    setClassmates(mates ? JSON.parse(mates) : [
+      { name: 'Amina Yusuf', progress: 92 },
+      { name: 'Chinedu Okafor', progress: 85 },
+      { name: 'Fatima Bello', progress: 78 },
+      { name: 'Emeka Nwosu', progress: 60 },
+      { name: 'Ngozi Uche', progress: 88 },
+    ]);
+  }, []);
+
+  // Save class data to localStorage
+  useEffect(() => {
+    localStorage.setItem('student_class_lessons', JSON.stringify(classLessons));
+  }, [classLessons]);
+  useEffect(() => {
+    localStorage.setItem('student_class_chat', JSON.stringify(classChat));
+  }, [classChat]);
+  useEffect(() => {
+    localStorage.setItem('student_classmates', JSON.stringify(classmates));
+  }, [classmates]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -262,6 +302,17 @@ export function StudentDashboard() {
 
   const profileInfo = assessmentData ? getProfileDescription(assessmentData.profile) : null;
   const featuredLesson = lessons.find(l => l.status === 'in-progress') || lessons[0];
+
+  const uploadClassLesson = (title) => {
+    setClassLessons([...classLessons, { id: `l${classLessons.length+1}`, title, uploadedBy: 'You', date: 'Now' }]);
+  };
+
+  const sendClassMessage = () => {
+    if (chatInput.trim()) {
+      setClassChat([...classChat, { sender: 'You', message: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+      setChatInput('');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -316,6 +367,12 @@ export function StudentDashboard() {
                   activeTab === 'settings' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
               >Settings</button>
+              <button
+                onClick={() => setClassTab(true)}
+                className={`px-4 py-2 rounded-lg transition-all ${
+                  classTab ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
+                }`}
+              >Class</button>
               <div className="w-px h-6 bg-gray-200 mx-2" />
               <Button onClick={handleLogout} variant="ghost" size="sm" className="text-[#6B7280] hover:text-[#111827]">
                 <LogOut className="w-4 h-4 mr-2" />
@@ -592,6 +649,38 @@ export function StudentDashboard() {
             {activeTab === 'connections' && (
               <div>
                 <AddConnections userRole="student" />
+              </div>
+            )}
+
+            {/* Class Feature */}
+            {classTab && (
+              <div className="p-8 border border-[#E5E7EB] rounded-2xl my-8">
+                <h2 className="mb-6">Your Class</h2>
+                <div className="mb-8">
+                  <h3 className="mb-2">Upload a Lesson</h3>
+                  <input type="text" placeholder="Lesson Title" className="border rounded px-2 py-1 mr-2" onKeyDown={e => { if (e.key === 'Enter') uploadClassLesson(e.target.value); }} />
+                  <button className="bg-[#4F46E5] text-white px-4 py-1 rounded" onClick={() => uploadClassLesson(prompt('Lesson Title:') || '')}>Upload</button>
+                </div>
+                <div className="mb-8">
+                  <h3 className="mb-2">Class Lessons</h3>
+                  <ul className="list-disc ml-6">
+                    {classLessons.map(l => <li key={l.id}><b>{l.title}</b> (by {l.uploadedBy}, {l.date})</li>)}
+                  </ul>
+                </div>
+                <div className="mb-8">
+                  <h3 className="mb-2">Class Chat</h3>
+                  <div className="border rounded p-4 h-40 overflow-y-auto bg-[#F9FAFB] mb-2">
+                    {classChat.map((msg, i) => <div key={i}><b>{msg.sender}:</b> {msg.message} <span className="text-xs text-[#6B7280]">({msg.time})</span></div>)}
+                  </div>
+                  <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} className="border rounded px-2 py-1 mr-2" placeholder="Type a message..." onKeyDown={e => { if (e.key === 'Enter') sendClassMessage(); }} />
+                  <button className="bg-[#4F46E5] text-white px-4 py-1 rounded" onClick={sendClassMessage}>Send</button>
+                </div>
+                <div>
+                  <h3 className="mb-2">Classmates</h3>
+                  <ul className="list-disc ml-6">
+                    {classmates.map((m, i) => <li key={i}><b>{m.name}</b> - Progress: <span className="text-[#10B981]">{m.progress}%</span></li>)}
+                  </ul>
+                </div>
               </div>
             )}
           </div>

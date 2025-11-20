@@ -45,22 +45,101 @@ export function ParentDashboard() {
     navigate('/');
   };
 
-  // Fallback mock data if API doesn't return data
-  const displayData: StudentConnection = childData || {
-    id: '1',
-    name: 'Amara Johnson',
-    email: '',
-    profile: 'Visual Learner',
-    progress: 78,
-    lessonsCompleted: 12,
-    totalLessons: 15,
-    lastActive: '2 hours ago',
-  };
+  // Expanded mock data for 12 children
+  const children: StudentConnection[] = [
+    { id: '1', name: 'Amara Johnson', email: '', profile: 'Visual Learner', progress: 78, lessonsCompleted: 12, totalLessons: 15, lastActive: '2 hours ago' },
+    { id: '2', name: 'David Okafor', email: '', profile: 'Auditory Learner', progress: 65, lessonsCompleted: 10, totalLessons: 16, lastActive: '1 day ago' },
+    { id: '3', name: 'Fatima Bello', email: '', profile: 'Kinesthetic Learner', progress: 82, lessonsCompleted: 14, totalLessons: 17, lastActive: '3 hours ago' },
+    { id: '4', name: 'Chinedu Eze', email: '', profile: 'Logical Learner', progress: 90, lessonsCompleted: 16, totalLessons: 18, lastActive: '30 min ago' },
+    { id: '5', name: 'Ngozi Umeh', email: '', profile: 'Social Learner', progress: 55, lessonsCompleted: 8, totalLessons: 15, lastActive: '2 days ago' },
+    { id: '6', name: 'Samuel Adeyemi', email: '', profile: 'Solitary Learner', progress: 70, lessonsCompleted: 11, totalLessons: 15, lastActive: '5 hours ago' },
+    { id: '7', name: 'Aisha Musa', email: '', profile: 'Verbal Learner', progress: 60, lessonsCompleted: 9, totalLessons: 14, lastActive: '1 hour ago' },
+    { id: '8', name: 'Emeka Obi', email: '', profile: 'Musical Learner', progress: 88, lessonsCompleted: 15, totalLessons: 16, lastActive: '10 min ago' },
+    { id: '9', name: 'Blessing Ojo', email: '', profile: 'Naturalistic Learner', progress: 73, lessonsCompleted: 12, totalLessons: 15, lastActive: '4 hours ago' },
+    { id: '10', name: 'Tunde Bakare', email: '', profile: 'Intrapersonal Learner', progress: 80, lessonsCompleted: 13, totalLessons: 15, lastActive: 'Yesterday' },
+    { id: '11', name: 'Kemi Adebayo', email: '', profile: 'Visual Learner', progress: 77, lessonsCompleted: 12, totalLessons: 15, lastActive: '3 days ago' },
+    { id: '12', name: 'Ifeanyi Nwosu', email: '', profile: 'Logical Learner', progress: 85, lessonsCompleted: 14, totalLessons: 16, lastActive: '6 hours ago' },
+  ];
 
+  // Pick first child for demo (could randomize or allow selection)
+  const displayData: StudentConnection = childData || children[0];
+
+  // Expanded recent lessons for demo
   const recentLessons = [
     { id: '1', title: 'Introduction to Fractions', subject: 'Mathematics', completed: true, date: '2 days ago', score: 92 },
     { id: '2', title: 'The Water Cycle', subject: 'Science', completed: true, date: '3 days ago', score: 88 },
     { id: '3', title: 'Parts of Speech', subject: 'English', completed: false, date: 'In progress', score: null },
+    { id: '4', title: 'Decimals & Percentages', subject: 'Mathematics', completed: true, date: '5 days ago', score: 95 },
+    { id: '5', title: 'Plant Life Cycles', subject: 'Science', completed: true, date: '6 days ago', score: 90 },
+    { id: '6', title: 'Reading Comprehension: Stories', subject: 'English', completed: true, date: '1 week ago', score: 87 },
+    { id: '7', title: 'Geometry Basics', subject: 'Mathematics', completed: false, date: 'In progress', score: null },
+    { id: '8', title: 'Weather & Climate', subject: 'Science', completed: true, date: '8 days ago', score: 85 },
+    { id: '9', title: 'Writing Persuasive Essays', subject: 'English', completed: true, date: '9 days ago', score: 91 },
+    { id: '10', title: 'Multiplication Mastery', subject: 'Mathematics', completed: true, date: '10 days ago', score: 89 },
+    { id: '11', title: 'Human Body Systems', subject: 'Science', completed: false, date: 'In progress', score: null },
+    { id: '12', title: 'Vocabulary Builder', subject: 'English', completed: true, date: '12 days ago', score: 93 },
+  ];
+
+  // Expanded strengths and focus areas
+  const strengths = [
+    'Consistent daily practice',
+    'Strong visual comprehension',
+    'Excellent retention rate',
+    'Self-motivated learner',
+    'Quick adaptation to new topics',
+    'Active participation in class',
+    'Positive attitude towards challenges',
+    'Collaborates well with peers',
+    'Creative problem solver',
+    'Shows leadership in group work',
+    'Enjoys hands-on activities',
+    'Reads ahead of lessons',
+  ];
+  const focusAreas = [
+    'Continue with visual examples',
+    'Encourage breaks every 20 min',
+    'Celebrate small wins',
+    'Practice word problems in math',
+    'Review science concepts weekly',
+    'Improve essay writing structure',
+    'Ask more questions during lessons',
+    'Try group study sessions',
+    'Use flashcards for vocabulary',
+    'Set short-term learning goals',
+    'Balance study and play time',
+    'Track progress with charts',
+  ];
+
+  // Expanded achievements
+  const achievements = [
+    { icon: <Trophy className="w-9 h-9 text-[#FBBF24]" />, title: '7 Day Streak', desc: 'Consistent learner' },
+    { icon: <Target className="w-9 h-9 text-[#10B981]" />, title: 'Fast Learner', desc: '3 lessons in a day' },
+    { icon: <Sparkles className="w-9 h-9 text-[#4F46E5]" />, title: 'Quick Start', desc: 'Completed assessment' },
+    { icon: <CheckCircle className="w-9 h-9 text-[#059669]" />, title: 'Math Whiz', desc: 'Top score in fractions' },
+    { icon: <Heart className="w-9 h-9 text-[#EA580C]" />, title: 'Science Star', desc: 'Excellent in experiments' },
+    { icon: <TrendingUp className="w-9 h-9 text-[#059669]" />, title: 'Progress Champ', desc: 'Improved by 20% this month' },
+    { icon: <Clock className="w-9 h-9 text-[#6B7280]" />, title: 'Early Bird', desc: 'Best performance in mornings' },
+    { icon: <Sparkles className="w-9 h-9 text-[#4F46E5]" />, title: 'Creative Writer', desc: 'Great essays in English' },
+    { icon: <Trophy className="w-9 h-9 text-[#FBBF24]" />, title: 'Team Player', desc: 'Helped classmates succeed' },
+    { icon: <CheckCircle className="w-9 h-9 text-[#059669]" />, title: 'Quiz Master', desc: 'High scores in quizzes' },
+    { icon: <Heart className="w-9 h-9 text-[#EA580C]" />, title: 'Kindness Award', desc: 'Supportive to peers' },
+    { icon: <TrendingUp className="w-9 h-9 text-[#059669]" />, title: 'Growth Mindset', desc: 'Never gives up!' },
+  ];
+
+  // Expanded progress by subject
+  const subjectProgress = [
+    { subject: 'Mathematics', percent: 75 },
+    { subject: 'English', percent: 60 },
+    { subject: 'Science', percent: 85 },
+    { subject: 'Social Studies', percent: 70 },
+    { subject: 'Art', percent: 90 },
+    { subject: 'ICT', percent: 65 },
+    { subject: 'Physical Education', percent: 80 },
+    { subject: 'Music', percent: 88 },
+    { subject: 'French', percent: 55 },
+    { subject: 'Home Economics', percent: 78 },
+    { subject: 'Civic Education', percent: 82 },
+    { subject: 'Health Science', percent: 74 },
   ];
 
   if (isLoading) {
@@ -224,10 +303,9 @@ export function ParentDashboard() {
                   <h3>Key Strengths</h3>
                 </div>
                 <ul className="text-[#6B7280] space-y-2">
-                  <li>• Consistent daily practice</li>
-                  <li>• Strong visual comprehension</li>
-                  <li>• Excellent retention rate</li>
-                  <li>• Self-motivated learner</li>
+                  {strengths.map((strength, index) => (
+                    <li key={index}>• {strength}</li>
+                  ))}
                 </ul>
               </div>
 
@@ -237,9 +315,9 @@ export function ParentDashboard() {
                   <h3>Focus Areas</h3>
                 </div>
                 <ul className="text-[#6B7280] space-y-2">
-                  <li>• Continue with visual examples</li>
-                  <li>• Encourage breaks every 20 min</li>
-                  <li>• Celebrate small wins</li>
+                  {focusAreas.map((area, index) => (
+                    <li key={index}>• {area}</li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -252,54 +330,30 @@ export function ParentDashboard() {
             <div className="p-8 border border-[#E5E7EB] rounded-2xl mb-8">
               <h2 className="mb-8">Achievements & Milestones</h2>
               <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl border-2 border-[#FBBF24] flex items-center justify-center">
-                    <Trophy className="w-9 h-9 text-[#FBBF24]" />
+                {achievements.map((achievement, index) => (
+                  <div key={index} className="text-center">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-xl border-2 border-[#FBBF24] flex items-center justify-center">
+                      {achievement.icon}
+                    </div>
+                    <h3 className="mb-2">{achievement.title}</h3>
+                    <p className="text-[#6B7280] text-sm">{achievement.desc}</p>
                   </div>
-                  <h3 className="mb-2">7 Day Streak</h3>
-                  <p className="text-[#6B7280] text-sm">Consistent learner</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl border-2 border-[#10B981] flex items-center justify-center">
-                    <Target className="w-9 h-9 text-[#10B981]" />
-                  </div>
-                  <h3 className="mb-2">Fast Learner</h3>
-                  <p className="text-[#6B7280] text-sm">3 lessons in a day</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-xl border-2 border-[#4F46E5] flex items-center justify-center">
-                    <Sparkles className="w-9 h-9 text-[#4F46E5]" />
-                  </div>
-                  <h3 className="mb-2">Quick Start</h3>
-                  <p className="text-[#6B7280] text-sm">Completed assessment</p>
-                </div>
+                ))}
               </div>
             </div>
 
             <div className="p-8 border border-[#E5E7EB] rounded-2xl">
               <h2 className="mb-8">Progress by Subject</h2>
               <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between mb-3">
-                    <span className="text-[#111827]">Mathematics</span>
-                    <span className="text-[#6B7280]">75%</span>
+                {subjectProgress.map((subject, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between mb-3">
+                      <span className="text-[#111827]">{subject.subject}</span>
+                      <span className="text-[#6B7280]">{subject.percent}%</span>
+                    </div>
+                    <Progress value={subject.percent} className="h-2" />
                   </div>
-                  <Progress value={75} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-3">
-                    <span className="text-[#111827]">English</span>
-                    <span className="text-[#6B7280]">60%</span>
-                  </div>
-                  <Progress value={60} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-3">
-                    <span className="text-[#111827]">Science</span>
-                    <span className="text-[#6B7280]">85%</span>
-                  </div>
-                  <Progress value={85} className="h-2" />
-                </div>
+                ))}
               </div>
             </div>
           </div>

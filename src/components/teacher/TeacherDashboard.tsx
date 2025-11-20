@@ -25,13 +25,17 @@ export function TeacherDashboard() {
   const [lessonContent, setLessonContent] = useState('');
   const [slides, setSlides] = useState([{ title: '', content: '' }]);
   const [uploading, setUploading] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<StudentConnection | null>(null);
+  const [encouragements, setEncouragements] = useState<{[id: string]: string[]}>({});
+  const [leaderboardTab, setLeaderboardTab] = useState(false);
 
   useEffect(() => {
     // MOCK DATA: Replace API calls with detailed, realistic mock data
     if (activeTab === 'overview' || activeTab === 'insights' || activeTab === 'students') {
       setIsLoading(true);
       setTimeout(() => {
-        setStudents([
+        let localStudents = localStorage.getItem('teacher_students');
+        let studentsData = localStudents ? JSON.parse(localStudents) : [
           {
             id: 'stu-001',
             name: 'Amina Yusuf',
@@ -152,11 +156,29 @@ export function TeacherDashboard() {
             totalLessons: 20,
             lastActive: '2025-11-14 09:25',
           },
-        ]);
+        ];
+        setStudents(studentsData);
         setIsLoading(false);
       }, 800);
     }
   }, [activeTab]);
+
+  // Save students to localStorage on change
+  useEffect(() => {
+    if (students.length > 0) {
+      localStorage.setItem('teacher_students', JSON.stringify(students));
+    }
+  }, [students]);
+
+  // Load encouragements from localStorage
+  useEffect(() => {
+    const data = localStorage.getItem('student_encouragements');
+    if (data) setEncouragements(JSON.parse(data));
+  }, []);
+  // Save encouragements to localStorage
+  useEffect(() => {
+    localStorage.setItem('student_encouragements', JSON.stringify(encouragements));
+  }, [encouragements]);
 
   const handleLogout = () => {
     logout();
@@ -187,9 +209,34 @@ export function TeacherDashboard() {
     }
   };
 
+  const sendEncouragement = (studentId: string, message: string) => {
+    setEncouragements(prev => {
+      const updated = { ...prev };
+      if (!updated[studentId]) updated[studentId] = [];
+      updated[studentId].push(message);
+      return updated;
+    });
+  };
+
+  const downloadReport = () => {
+    const csv = [
+      'Name,Email,Profile,Progress,Lessons Completed,Total Lessons,Last Active',
+      ...students.map(s => `${s.name},${s.email},${s.profile},${s.progress},${s.lessonsCompleted},${s.totalLessons},${s.lastActive}`)
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'class_report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const avgProgress = students.length > 0
     ? Math.round(students.reduce((acc, s) => acc + s.progress, 0) / students.length)
     : 0;
+
+  const topStudents = [...students].sort((a, b) => b.progress - a.progress).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-white">
@@ -540,6 +587,9 @@ export function TeacherDashboard() {
             ) : (
               <div className="p-8 border border-[#E5E7EB] rounded-2xl">
                 <h2 className="mb-8">Your Students</h2>
+                <Button onClick={downloadReport} className="mb-4 px-4 py-2 bg-[#4F46E5] text-white rounded-xl">
+                  Download Class Report (CSV)
+                </Button>
                 {students.length > 0 ? (
                   <div className="space-y-4">
                     {students.map((student) => (
@@ -568,6 +618,10 @@ export function TeacherDashboard() {
                             </div>
                           </div>
                         </div>
+                        <div className="mt-4 flex gap-2">
+                          <button onClick={() => setSelectedStudent(student)} className="text-[#4F46E5] underline">View Details</button>
+                          <button onClick={() => sendEncouragement(student.id, 'Keep up the great work!')} className="ml-2 text-[#059669] underline">Send Encouragement</button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -578,6 +632,43 @@ export function TeacherDashboard() {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Leaderboard Tab */}
+        {leaderboardTab && (
+          <div className="p-8 border border-[#E5E7EB] rounded-2xl my-8">
+            <h2 className="mb-6">Class Leaderboard</h2>
+            <ol className="space-y-4">
+              {topStudents.map((s, i) => (
+                <li key={s.id} className="flex items-center gap-4">
+                  <span className="text-2xl font-bold text-[#4F46E5]">#{i+1}</span>
+                  <span className="font-semibold">{s.name}</span>
+                  <span className="ml-auto text-[#10B981]">{s.progress}%</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {/* Student Details Modal */}
+        {selectedStudent && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-2xl max-w-lg w-full relative">
+              <button onClick={() => setSelectedStudent(null)} className="absolute top-2 right-2 text-[#6B7280]">Close</button>
+              <h2 className="mb-4">{selectedStudent.name}'s Full Progress</h2>
+              <p><b>Email:</b> {selectedStudent.email}</p>
+              <p><b>Profile:</b> {selectedStudent.profile}</p>
+              <p><b>Progress:</b> {selectedStudent.progress}%</p>
+              <p><b>Lessons Completed:</b> {selectedStudent.lessonsCompleted}/{selectedStudent.totalLessons}</p>
+              <p><b>Last Active:</b> {selectedStudent.lastActive}</p>
+              <h3 className="mt-4 mb-2">Encouragements</h3>
+              <ul className="list-disc ml-6 text-[#059669]">
+                {(encouragements[selectedStudent.id] || []).map((msg, idx) => (
+                  <li key={idx}>{msg}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </div>

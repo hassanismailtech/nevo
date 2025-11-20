@@ -15,7 +15,7 @@ export function SignupPage() {
   const { signup, isLoading, error, clearError } = useAuthStore();
   
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     email: '',
     password: '',
     role: roleFromUrl
@@ -33,7 +33,7 @@ export function SignupPage() {
     }
     
     try {
-      await signup(formData.fullName, formData.email, formData.password, formData.role as 'student' | 'teacher' | 'parent');
+      await signup(formData.name, formData.email, formData.password, formData.role as 'student' | 'teacher' | 'parent');
       
       if (formData.role === 'student') {
         navigate('/assessment');
@@ -114,16 +114,16 @@ export function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-semibold text-[#111827]">Full Name</Label>
+              <Label htmlFor="name" className="text-sm font-semibold text-[#111827]">Full Name</Label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
                 <Input
-                  id="fullName"
+                  id="name"
                   type="text"
                   placeholder="Enter your full name"
                   className="pl-12 h-12 text-base rounded-xl border-2 border-gray-200 focus:border-[#4F46E5] bg-white"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                   disabled={isLoading}
                 />

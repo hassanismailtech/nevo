@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
@@ -11,32 +11,22 @@ import nevoLogo from '../../assets/nevo-logo.png';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError, currentUser } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [localError, setLocalError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLocalError(null);
-    clearError();
-    
-    try {
-      await login(formData.email, formData.password);
-      
-      // Check user role and route accordingly
-      const authData = localStorage.getItem('nevo-auth-storage');
-      if (authData) {
-        const parsed = JSON.parse(authData);
-        const role = parsed.state?.currentUser?.role;
-        
-        if (role === 'student') {
-          // Check if assessment completed
+  useEffect(() => {
+    if (currentUser) {
+      const role = currentUser.role;
+      if (role === 'student') {
+        // Check if assessment completed
+        (async () => {
           try {
             const assessmentResult = await assessmentApi.getResult();
-            if (assessmentResult) {
+            if (assessmentResult && assessmentResult.diagnosis) {
               navigate('/student/dashboard');
             } else {
               navigate('/assessment');
@@ -44,12 +34,21 @@ export function LoginPage() {
           } catch {
             navigate('/assessment');
           }
-        } else if (role === 'teacher') {
-          navigate('/teacher/dashboard');
-        } else if (role === 'parent') {
-          navigate('/parent/dashboard');
-        }
+        })();
+      } else if (role === 'teacher') {
+        navigate('/teacher/dashboard');
+      } else if (role === 'parent') {
+        navigate('/parent/dashboard');
       }
+    }
+  }, [currentUser, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
+    clearError();
+    try {
+      await login(formData.email, formData.password);
     } catch (err: any) {
       setLocalError(err.message || 'Login failed. Please check your credentials.');
     }

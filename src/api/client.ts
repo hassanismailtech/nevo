@@ -1,4 +1,7 @@
-const API_BASE_URL = 'https://nevo-backend.onrender.com';
+const API_BASE_URL =
+  typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : 'https://nevo-backend.onrender.com';
 
 export interface ApiError {
   message: string;
@@ -42,11 +45,14 @@ class ApiClient {
     }
 
     const url = `${this.baseURL}${endpoint}`;
-    
+    // Debug log for token and request URL
+    console.log('[ApiClient] Request:', { url, token, headers });
+
     try {
       const response = await fetch(url, {
         ...options,
         headers,
+        credentials: 'include', // Always send credentials for CORS
       });
 
       if (!response.ok) {

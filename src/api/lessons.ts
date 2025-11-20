@@ -47,8 +47,27 @@ export interface UploadLessonResponse {
 }
 
 export const lessonsApi = {
-  getStudentLessons: async (): Promise<Lesson[]> => {
-    return apiClient.get<Lesson[]>('/lesson/list');
+  getStudentLessons: async (studentId?: string): Promise<Lesson[]> => {
+    // If studentId is not provided, get from authStore
+    let id = studentId;
+    if (!id) {
+      try {
+        const authData = localStorage.getItem('nevo-auth-storage');
+        if (authData) {
+          const parsed = JSON.parse(authData);
+          id = parsed.state?.currentUser?.id;
+        }
+      } catch {}
+    }
+    // Fallback for demo: if no id, use generic endpoint
+    let response;
+    if (!id) {
+      // Try generic student lessons endpoint for demo
+      response = await apiClient.get<{ lessons: Lesson[] }>(`/student/lessons`);
+    } else {
+      response = await apiClient.get<{ lessons: Lesson[] }>(`/student/${id}/lessons`);
+    }
+    return response.lessons || [];
   },
 
   getLesson: async (lessonId: string): Promise<LessonContent> => {

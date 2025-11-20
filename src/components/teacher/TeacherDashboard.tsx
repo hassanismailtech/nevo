@@ -7,6 +7,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { AddConnections } from '../AddConnections';
+import { MobileNavbar } from '../ui/MobileNavbar';
 import { useAuthStore } from '../../stores/authStore';
 import { connectionsApi, type StudentConnection } from '../../api/connections';
 import { lessonsApi } from '../../api/lessons';
@@ -22,6 +23,7 @@ export function TeacherDashboard() {
   const [lessonTitle, setLessonTitle] = useState('');
   const [lessonSubject, setLessonSubject] = useState('');
   const [lessonContent, setLessonContent] = useState('');
+  const [slides, setSlides] = useState([{ title: '', content: '' }]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -48,22 +50,21 @@ export function TeacherDashboard() {
   };
 
   const handleUploadLesson = async () => {
-    if (!lessonTitle || !lessonSubject || !lessonContent) return;
-    
+    if (!lessonTitle || !lessonSubject || !lessonContent || slides.length === 0) return;
     setUploading(true);
     setError(null);
-    
     try {
       await lessonsApi.uploadLesson({
         title: lessonTitle,
         subject: lessonSubject,
         content: lessonContent,
+        slides: slides.filter(s => s.title && s.content),
       });
-      
       setLessonTitle('');
       setLessonSubject('');
       setLessonContent('');
-      alert('Lesson uploaded and personalized for all students!');
+      setSlides([{ title: '', content: '' }]);
+      alert('Lesson with slides uploaded and personalized for all students!');
     } catch (err: any) {
       setError(err.message || 'Failed to upload lesson');
     } finally {
@@ -87,52 +88,28 @@ export function TeacherDashboard() {
               <span className="px-2 py-1 bg-[#ECFDF5] text-[#059669] rounded-md text-sm">Teacher</span>
             </div>
             
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`px-4 py-2 rounded-lg transition-all ${
-                  activeTab === 'overview' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
-                }`}
-              >
-                Class Overview
-              </button>
-              <button
-                onClick={() => setActiveTab('upload')}
-                className={`px-4 py-2 rounded-lg transition-all ${
-                  activeTab === 'upload' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
-                }`}
-              >
-                Upload Lesson
-              </button>
-              <button
-                onClick={() => setActiveTab('insights')}
-                className={`px-4 py-2 rounded-lg transition-all ${
-                  activeTab === 'insights' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
-                }`}
-              >
-                Student Insights
-              </button>
-              <button
-                onClick={() => setActiveTab('students')}
-                className={`px-4 py-2 rounded-lg transition-all ${
-                  activeTab === 'students' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
-                }`}
-              >
-                Manage Students
-              </button>
-              <div className="w-px h-6 bg-gray-200 mx-2" />
-              <Button onClick={handleLogout} variant="ghost" size="sm" className="text-[#6B7280] hover:text-[#111827]">
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveTab('students')}
+                  className={`px-4 py-2 rounded-lg transition-all ${
+                    activeTab === 'students' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
+                  }`}
+                >
+                  Manage Students
+                </button>
+                <div className="w-px h-6 bg-gray-200 mx-2" />
+                <Button onClick={handleLogout} variant="ghost" size="sm" className="text-[#6B7280] hover:text-[#111827]">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
           </div>
         </div>
       </nav>
 
       <div className="container mx-auto px-6 py-12">
         <div className="mb-12">
-          <h1 className="mb-2">Welcome, {currentUser?.fullName?.split(' ')[0] || 'Teacher'}!</h1>
+          <h1 className="mb-2">Welcome, {currentUser?.name?.split(' ')[0] || 'Teacher'}!</h1>
           <p className="text-[#6B7280] text-lg">Manage your class and create personalized lessons</p>
         </div>
 
@@ -291,6 +268,49 @@ export function TeacherDashboard() {
                   />
                 </div>
 
+                {/* Slides Input */}
+                <div className="space-y-2">
+                  <Label className="text-[#111827]">Slides</Label>
+                  {slides.map((slide, idx) => (
+                    <div key={idx} className="flex gap-2 mb-2">
+                      <Input
+                        placeholder={`Slide ${idx + 1} Title`}
+                        value={slide.title}
+                        onChange={e => {
+                          const newSlides = [...slides];
+                          newSlides[idx].title = e.target.value;
+                          setSlides(newSlides);
+                        }}
+                        className="w-1/3"
+                        disabled={uploading}
+                      />
+                      <Textarea
+                        placeholder={`Slide ${idx + 1} Content`}
+                        value={slide.content}
+                        onChange={e => {
+                          const newSlides = [...slides];
+                          newSlides[idx].content = e.target.value;
+                          setSlides(newSlides);
+                        }}
+                        className="w-2/3"
+                        disabled={uploading}
+                      />
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          setSlides(slides.filter((_, i) => i !== idx));
+                        }}
+                        disabled={slides.length === 1 || uploading}
+                      >Remove</Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    onClick={() => setSlides([...slides, { title: '', content: '' }])}
+                    disabled={uploading}
+                  >Add Slide</Button>
+                </div>
+
                 <div className="p-6 border border-[#E0E7FF] bg-[#F5F7FF] rounded-2xl">
                   <h3 className="mb-3">How AI Personalization Works</h3>
                   <ul className="space-y-2 text-[#6B7280]">
@@ -304,7 +324,7 @@ export function TeacherDashboard() {
 
                 <Button
                   onClick={handleUploadLesson}
-                  disabled={!lessonTitle || !lessonSubject || !lessonContent || uploading}
+                  disabled={!lessonTitle || !lessonSubject || !lessonContent || slides.length === 0 || uploading}
                   className="w-full bg-[#4F46E5] text-white hover:bg-[#4338CA] h-12 rounded-xl disabled:opacity-50"
                 >
                   {uploading ? (
@@ -446,6 +466,8 @@ export function TeacherDashboard() {
           </div>
         )}
       </div>
+      {/* Mobile Navbar */}
+      <MobileNavbar role="teacher" />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { authApi, type AuthResponse } from '../api/auth'
 
 export interface User {
   id: string
-  fullName: string
+  name: string
   email: string
   role: 'student' | 'teacher' | 'parent'
   createdAt: string
@@ -28,7 +28,7 @@ interface AuthState {
   setToken: (token: string | null) => void
   setAssessmentData: (data: AssessmentData | null) => void
   login: (email: string, password: string) => Promise<void>
-  signup: (fullName: string, email: string, password: string, role: 'student' | 'teacher' | 'parent') => Promise<void>
+  signup: (name: string, email: string, password: string, role: 'student' | 'teacher' | 'parent') => Promise<void>
   logout: () => void
   clearError: () => void
 }
@@ -43,13 +43,17 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       
       setUser: (user) => set({ currentUser: user }),
-      setToken: (token) => set({ token }),
+      setToken: (token) => {
+        console.log('[AuthStore] setToken called:', token);
+        set({ token });
+      },
       setAssessmentData: (data) => set({ assessmentData: data }),
       
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null })
         try {
           const response: AuthResponse = await authApi.login({ email, password })
+          console.log('[AuthStore] login response:', response);
           set({
             currentUser: response.user,
             token: response.token,
@@ -65,10 +69,11 @@ export const useAuthStore = create<AuthState>()(
         }
       },
       
-      signup: async (fullName: string, email: string, password: string, role: 'student' | 'teacher' | 'parent') => {
+      signup: async (name: string, email: string, password: string, role: 'student' | 'teacher' | 'parent') => {
         set({ isLoading: true, error: null })
         try {
-          const response: AuthResponse = await authApi.signup({ fullName, email, password, role })
+          const response: AuthResponse = await authApi.signup({ name, email, password, role })
+          console.log('[AuthStore] signup response:', response);
           set({
             currentUser: response.user,
             token: response.token,

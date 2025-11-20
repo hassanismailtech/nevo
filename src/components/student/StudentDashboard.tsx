@@ -4,6 +4,7 @@ import { Brain, BookOpen, Trophy, Settings, LogOut, Sparkles, Clock, Target, Tre
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { AddConnections } from '../AddConnections';
+import { MobileNavbar } from '../ui/MobileNavbar';
 import { useAuthStore } from '../../stores/authStore';
 import { lessonsApi, type Lesson } from '../../api/lessons';
 import { assessmentApi } from '../../api/assessment';
@@ -23,11 +24,11 @@ export function StudentDashboard() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        
-        // Fetch lessons
-        const fetchedLessons = await lessonsApi.getStudentLessons();
+
+        // Fetch lessons using correct student endpoint
+        const fetchedLessons = await lessonsApi.getStudentLessons(currentUser?.id);
         setLessons(fetchedLessons);
-        
+
         // Fetch assessment result if not in store
         if (!assessmentData) {
           try {
@@ -47,7 +48,7 @@ export function StudentDashboard() {
     };
 
     fetchData();
-  }, [assessmentData, setAssessmentData]);
+  }, [assessmentData, setAssessmentData, currentUser]);
 
   const handleLogout = () => {
     logout();
@@ -121,41 +122,31 @@ export function StudentDashboard() {
                 className={`px-4 py-2 rounded-lg transition-all ${
                   activeTab === 'today' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
-              >
-                Today
-              </button>
+              >Today</button>
               <button
                 onClick={() => setActiveTab('all')}
                 className={`px-4 py-2 rounded-lg transition-all ${
                   activeTab === 'all' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
-              >
-                All Lessons
-              </button>
+              >All Lessons</button>
               <button
                 onClick={() => setActiveTab('progress')}
                 className={`px-4 py-2 rounded-lg transition-all ${
                   activeTab === 'progress' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
-              >
-                Progress
-              </button>
+              >Progress</button>
               <button
                 onClick={() => setActiveTab('connections')}
                 className={`px-4 py-2 rounded-lg transition-all ${
                   activeTab === 'connections' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
-              >
-                My Team
-              </button>
+              >My Team</button>
               <button
                 onClick={() => setActiveTab('settings')}
                 className={`px-4 py-2 rounded-lg transition-all ${
                   activeTab === 'settings' ? 'text-[#4F46E5]' : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
-              >
-                Settings
-              </button>
+              >Settings</button>
               <div className="w-px h-6 bg-gray-200 mx-2" />
               <Button onClick={handleLogout} variant="ghost" size="sm" className="text-[#6B7280] hover:text-[#111827]">
                 <LogOut className="w-4 h-4 mr-2" />
@@ -169,7 +160,7 @@ export function StudentDashboard() {
       <div className="container mx-auto px-6 py-12">
         {/* Welcome Section */}
         <div className="mb-12">
-          <h1 className="mb-2">Welcome back, {currentUser?.fullName?.split(' ')[0] || 'Student'}!</h1>
+          <h1 className="mb-2">Welcome back, {currentUser?.name?.split(' ')[0] || currentUser?.fullName?.split(' ')[0] || 'Student'}!</h1>
           <p className="text-[#6B7280] text-lg">Let's continue your learning journey</p>
         </div>
 
@@ -471,18 +462,22 @@ export function StudentDashboard() {
               <h3 className="mb-4">Quick Actions</h3>
               <div className="space-y-2">
                 <Button 
-                  onClick={() => setActiveTab('connections')}
+                  onClick={() => navigate('/student/connections')}
                   className="w-full justify-start text-[#6B7280] hover:text-[#111827] hover:bg-[#F9FAFB]" 
                   variant="ghost"
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
                   Add Teacher/Parent
                 </Button>
-                <Button className="w-full justify-start text-[#6B7280] hover:text-[#111827] hover:bg-[#F9FAFB]" variant="ghost">
+                <Button 
+                  onClick={() => setActiveTab('all')}
+                  className="w-full justify-start text-[#6B7280] hover:text-[#111827] hover:bg-[#F9FAFB]" variant="ghost">
                   <BookOpen className="w-4 h-4 mr-2" />
                   Browse All Lessons
                 </Button>
-                <Button className="w-full justify-start text-[#6B7280] hover:text-[#111827] hover:bg-[#F9FAFB]" variant="ghost">
+                <Button 
+                  onClick={() => setActiveTab('progress')}
+                  className="w-full justify-start text-[#6B7280] hover:text-[#111827] hover:bg-[#F9FAFB]" variant="ghost">
                   <Trophy className="w-4 h-4 mr-2" />
                   View Achievements
                 </Button>
@@ -499,6 +494,8 @@ export function StudentDashboard() {
           </div>
         </div>
       </div>
+      {/* Mobile Navbar */}
+      <MobileNavbar role="student" />
     </div>
   );
 }

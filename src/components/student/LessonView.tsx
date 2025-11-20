@@ -44,8 +44,9 @@ export function LessonView() {
 
   // Get user profile from store
   const profile = assessmentData?.profile || 'visual-learner';
-  const slide = lesson?.slides[currentSlide];
-  const progress = lesson ? ((currentSlide + 1) / lesson.slides.length) * 100 : 0;
+  const hasSlides = lesson?.slides && Array.isArray(lesson.slides) && lesson.slides.length > 0;
+  const slide = hasSlides ? lesson.slides[currentSlide] : null;
+  const progress = hasSlides ? ((currentSlide + 1) / lesson.slides.length) * 100 : 0;
 
   const handleNext = async () => {
     if (!lesson) return;
@@ -126,6 +127,21 @@ export function LessonView() {
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-[#111827] mb-2">Error Loading Lesson</h2>
           <p className="text-[#6B7280] mb-6">{error || 'Lesson not found'}</p>
+          <Button onClick={() => navigate('/student/dashboard')} className="bg-[#4F46E5] text-white">
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasSlides) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#F9FAFB] to-white flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center">
+          <Book className="w-12 h-12 text-[#4F46E5] mx-auto mb-4" />
+          <h2 className="text-[#111827] mb-2">No Slides Available</h2>
+          <p className="text-[#6B7280] mb-6">This lesson does not have any slides yet.</p>
           <Button onClick={() => navigate('/student/dashboard')} className="bg-[#4F46E5] text-white">
             Back to Dashboard
           </Button>

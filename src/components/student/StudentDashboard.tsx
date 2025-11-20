@@ -21,33 +21,202 @@ export function StudentDashboard() {
   const [streak] = useState(7);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
+    // MOCK DATA: Replace API calls with detailed, realistic mock data
+    setIsLoading(true);
+    setTimeout(() => {
+      // Voluminous, detailed lessons
+      setLessons([
+        {
+          id: 'math-101',
+          title: 'Introduction to Fractions',
+          subject: 'Mathematics',
+          status: 'completed',
+          progress: 100,
+          xp: 50,
+          duration: '45 min',
+          createdAt: '2025-09-01',
+          updatedAt: '2025-09-01',
+        },
+        {
+          id: 'eng-201',
+          title: 'Reading Comprehension: The Solar System',
+          subject: 'English',
+          status: 'in-progress',
+          progress: 60,
+          xp: 30,
+          duration: '30 min',
+          createdAt: '2025-09-05',
+          updatedAt: '2025-09-10',
+        },
+        {
+          id: 'sci-301',
+          title: 'Science Lab: Water Cycle',
+          subject: 'Science',
+          status: 'not-started',
+          progress: 0,
+          xp: 0,
+          duration: '50 min',
+          createdAt: '2025-09-12',
+          updatedAt: '2025-09-12',
+        },
+        {
+          id: 'hist-401',
+          title: 'History: Ancient Egypt',
+          subject: 'History',
+          status: 'completed',
+          progress: 100,
+          xp: 60,
+          duration: '40 min',
+          createdAt: '2025-09-15',
+          updatedAt: '2025-09-15',
+        },
+        {
+          id: 'math-102',
+          title: 'Geometry: Shapes and Angles',
+          subject: 'Mathematics',
+          status: 'in-progress',
+          progress: 80,
+          xp: 40,
+          duration: '35 min',
+          createdAt: '2025-09-18',
+          updatedAt: '2025-09-19',
+        },
+        {
+          id: 'eng-202',
+          title: 'Creative Writing: My Dream School',
+          subject: 'English',
+          status: 'not-started',
+          progress: 0,
+          xp: 0,
+          duration: '25 min',
+          createdAt: '2025-09-20',
+          updatedAt: '2025-09-20',
+        },
+        {
+          id: 'sci-302',
+          title: 'Biology: Plant Life Cycles',
+          subject: 'Science',
+          status: 'completed',
+          progress: 100,
+          xp: 55,
+          duration: '48 min',
+          createdAt: '2025-09-22',
+          updatedAt: '2025-09-22',
+        },
+        {
+          id: 'hist-402',
+          title: 'World War II: Causes and Effects',
+          subject: 'History',
+          status: 'in-progress',
+          progress: 50,
+          xp: 25,
+          duration: '60 min',
+          createdAt: '2025-09-25',
+          updatedAt: '2025-09-26',
+        },
+        {
+          id: 'math-103',
+          title: 'Algebra: Solving Equations',
+          subject: 'Mathematics',
+          status: 'completed',
+          progress: 100,
+          xp: 70,
+          duration: '55 min',
+          createdAt: '2025-09-28',
+          updatedAt: '2025-09-28',
+        },
+        {
+          id: 'eng-203',
+          title: 'Poetry: Express Yourself',
+          subject: 'English',
+          status: 'in-progress',
+          progress: 40,
+          xp: 15,
+          duration: '20 min',
+          createdAt: '2025-09-30',
+          updatedAt: '2025-10-01',
+        },
+        {
+          id: 'sci-303',
+          title: 'Physics: Forces and Motion',
+          subject: 'Science',
+          status: 'not-started',
+          progress: 0,
+          xp: 0,
+          duration: '45 min',
+          createdAt: '2025-10-02',
+          updatedAt: '2025-10-02',
+        },
+        {
+          id: 'math-104',
+          title: 'Statistics: Data and Probability',
+          subject: 'Mathematics',
+          status: 'completed',
+          progress: 100,
+          xp: 65,
+          duration: '50 min',
+          createdAt: '2025-10-04',
+          updatedAt: '2025-10-04',
+        },
+        {
+          id: 'eng-204',
+          title: 'Drama: Role Play and Performance',
+          subject: 'English',
+          status: 'in-progress',
+          progress: 70,
+          xp: 35,
+          duration: '30 min',
+          createdAt: '2025-10-06',
+          updatedAt: '2025-10-07',
+        },
+        {
+          id: 'sci-304',
+          title: 'Chemistry: States of Matter',
+          subject: 'Science',
+          status: 'not-started',
+          progress: 0,
+          xp: 0,
+          duration: '55 min',
+          createdAt: '2025-10-08',
+          updatedAt: '2025-10-08',
+        },
+        {
+          id: 'hist-403',
+          title: 'Modern Africa: Leaders and Change',
+          subject: 'History',
+          status: 'completed',
+          progress: 100,
+          xp: 80,
+          duration: '65 min',
+          createdAt: '2025-10-10',
+          updatedAt: '2025-10-10',
+        },
+      ]);
 
-        // Fetch lessons using correct student endpoint
-        const fetchedLessons = await lessonsApi.getStudentLessons(currentUser?.id);
-        setLessons(fetchedLessons);
-
-        // Fetch assessment result if not in store
-        if (!assessmentData) {
-          try {
-            const result = await assessmentApi.getResult();
-            if (result) {
-              setAssessmentData(result);
-            }
-          } catch {
-            // No assessment found, that's okay
-          }
-        }
-      } catch (err: any) {
-        setError(err.message || 'Failed to load dashboard data');
-      } finally {
-        setIsLoading(false);
+      // Mock assessment data
+      if (!assessmentData) {
+        setAssessmentData({
+          id: 'assess-001',
+          profile: 'adhd',
+          answers: {
+            1: 'attention',
+            2: 'social',
+            3: 'reading',
+            4: 'visual',
+            5: 'auditory',
+          },
+          completedAt: '2025-10-05T10:00:00Z',
+          recommendations: [
+            'Take frequent breaks during study sessions.',
+            'Use interactive lessons and visual aids.',
+            'Practice reading with short, clear texts.',
+            'Engage in group activities for social learning.',
+            'Try audio lessons for auditory reinforcement.',
+          ],
+        });
       }
-    };
-
-    fetchData();
+      setIsLoading(false);
+    }, 800);
   }, [assessmentData, setAssessmentData, currentUser]);
 
   const handleLogout = () => {

@@ -27,21 +27,135 @@ export function TeacherDashboard() {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      if (activeTab === 'overview' || activeTab === 'insights' || activeTab === 'students') {
-        try {
-          setIsLoading(true);
-          const fetchedStudents = await connectionsApi.getStudents();
-          setStudents(fetchedStudents);
-        } catch (err: any) {
-          setError(err.message || 'Failed to load students');
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchStudents();
+    // MOCK DATA: Replace API calls with detailed, realistic mock data
+    if (activeTab === 'overview' || activeTab === 'insights' || activeTab === 'students') {
+      setIsLoading(true);
+      setTimeout(() => {
+        setStudents([
+          {
+            id: 'stu-001',
+            name: 'Amina Yusuf',
+            email: 'amina.yusuf@school.edu',
+            profile: 'Visual Learner, ADHD',
+            progress: 92,
+            lessonsCompleted: 18,
+            totalLessons: 20,
+            lastActive: '2025-11-19 14:32',
+          },
+          {
+            id: 'stu-002',
+            name: 'Chinedu Okafor',
+            email: 'chinedu.okafor@school.edu',
+            profile: 'Structured Learner, Autism',
+            progress: 85,
+            lessonsCompleted: 17,
+            totalLessons: 20,
+            lastActive: '2025-11-19 09:15',
+          },
+          {
+            id: 'stu-003',
+            name: 'Fatima Bello',
+            email: 'fatima.bello@school.edu',
+            profile: 'Auditory Learner',
+            progress: 78,
+            lessonsCompleted: 15,
+            totalLessons: 20,
+            lastActive: '2025-11-18 17:50',
+          },
+          {
+            id: 'stu-004',
+            name: 'Emeka Nwosu',
+            email: 'emeka.nwosu@school.edu',
+            profile: 'Kinesthetic Learner',
+            progress: 60,
+            lessonsCompleted: 12,
+            totalLessons: 20,
+            lastActive: '2025-11-18 12:10',
+          },
+          {
+            id: 'stu-005',
+            name: 'Ngozi Uche',
+            email: 'ngozi.uche@school.edu',
+            profile: 'Visual Learner',
+            progress: 88,
+            lessonsCompleted: 16,
+            totalLessons: 20,
+            lastActive: '2025-11-17 16:45',
+          },
+          {
+            id: 'stu-006',
+            name: 'Bola Adebayo',
+            email: 'bola.adebayo@school.edu',
+            profile: 'Auditory Learner, ADHD',
+            progress: 75,
+            lessonsCompleted: 14,
+            totalLessons: 20,
+            lastActive: '2025-11-17 10:20',
+          },
+          {
+            id: 'stu-007',
+            name: 'Ifeanyi Eze',
+            email: 'ifeanyi.eze@school.edu',
+            profile: 'Structured Learner',
+            progress: 90,
+            lessonsCompleted: 18,
+            totalLessons: 20,
+            lastActive: '2025-11-16 13:05',
+          },
+          {
+            id: 'stu-008',
+            name: 'Maryam Sani',
+            email: 'maryam.sani@school.edu',
+            profile: 'Kinesthetic Learner, Autism',
+            progress: 82,
+            lessonsCompleted: 15,
+            totalLessons: 20,
+            lastActive: '2025-11-16 08:30',
+          },
+          {
+            id: 'stu-009',
+            name: 'Samuel Johnson',
+            email: 'samuel.johnson@school.edu',
+            profile: 'Visual Learner',
+            progress: 95,
+            lessonsCompleted: 19,
+            totalLessons: 20,
+            lastActive: '2025-11-15 18:10',
+          },
+          {
+            id: 'stu-010',
+            name: 'Blessing Okoro',
+            email: 'blessing.okoro@school.edu',
+            profile: 'Auditory Learner',
+            progress: 70,
+            lessonsCompleted: 13,
+            totalLessons: 20,
+            lastActive: '2025-11-15 11:55',
+          },
+          {
+            id: 'stu-011',
+            name: 'Tunde Balogun',
+            email: 'tunde.balogun@school.edu',
+            profile: 'Structured Learner, ADHD',
+            progress: 80,
+            lessonsCompleted: 16,
+            totalLessons: 20,
+            lastActive: '2025-11-14 15:40',
+          },
+          {
+            id: 'stu-012',
+            name: 'Zainab Musa',
+            email: 'zainab.musa@school.edu',
+            profile: 'Kinesthetic Learner',
+            progress: 77,
+            lessonsCompleted: 14,
+            totalLessons: 20,
+            lastActive: '2025-11-14 09:25',
+          },
+        ]);
+        setIsLoading(false);
+      }, 800);
+    }
   }, [activeTab]);
 
   const handleLogout = () => {

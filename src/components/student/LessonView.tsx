@@ -21,25 +21,59 @@ export function LessonView() {
   const [xpEarned, setXpEarned] = useState(0);
 
   useEffect(() => {
-    const fetchLesson = async () => {
+    // MOCK DATA: Replace API call with detailed, realistic mock lesson
+    setIsLoading(true);
+    setTimeout(() => {
       if (!lessonId) {
         setError('Lesson ID is required');
         setIsLoading(false);
         return;
       }
-
-      try {
-        setIsLoading(true);
-        const fetchedLesson = await lessonsApi.getLesson(lessonId);
-        setLesson(fetchedLesson);
-      } catch (err: any) {
-        setError(err.message || 'Failed to load lesson');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLesson();
+      // Voluminous, wordy lesson content
+      setLesson({
+        id: lessonId,
+        title: 'Introduction to Fractions',
+        subject: 'Mathematics',
+        profile: 'adhd',
+        xpReward: 50,
+        slides: [
+          {
+            type: 'intro',
+            title: 'Welcome to Fractions!',
+            content: 'Fractions are a way to represent parts of a whole. In this lesson, you will learn what fractions are, how to read them, and how to use them in everyday life. Imagine sharing a pizza with friends—fractions help you figure out how much each person gets! Let’s dive in and explore the world of fractions together with fun examples and interactive activities.',
+          },
+          {
+            type: 'visual',
+            title: 'Visualizing Fractions',
+            content: 'Look at the pizza below. If you cut it into 8 slices and eat 3, you have eaten 3/8 of the pizza. Visuals like this help you understand fractions better. Try drawing your own pizza and shade the slices you would eat!',
+            visual: 'pizza-diagram.png',
+          },
+          {
+            type: 'content',
+            title: 'Reading Fractions',
+            content: 'A fraction has two numbers: the top (numerator) and the bottom (denominator). The numerator tells you how many parts you have, and the denominator tells you how many parts make up the whole. For example, 3/4 means 3 out of 4 equal parts. Practice reading fractions with objects around you—books, pencils, or even pieces of fruit.',
+          },
+          {
+            type: 'interactive',
+            title: 'Quiz Time!',
+            content: 'Which of these is the correct way to write "five out of eight" as a fraction?',
+            question: {
+              text: 'Choose the correct fraction:',
+              options: ['5/8', '8/5', '3/8', '8/3'],
+              correct: 0,
+              explanation: '5/8 means five out of eight parts. The numerator is 5, the denominator is 8.',
+            },
+          },
+          {
+            type: 'summary',
+            title: 'Summary & Next Steps',
+            content: 'Great job! You now know what fractions are and how to read them. Next, you’ll learn how to add and subtract fractions in real-life scenarios. Remember, fractions are everywhere—from recipes to sports scores. Keep practicing and you’ll master them in no time!',
+          },
+          // Add 10+ more slides with detailed, wordy content, visuals, and quizzes
+        ],
+      });
+      setIsLoading(false);
+    }, 800);
   }, [lessonId]);
 
   // Get user profile from store

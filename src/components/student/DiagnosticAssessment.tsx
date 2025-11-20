@@ -21,19 +21,44 @@ export function DiagnosticAssessment() {
   const [direction, setDirection] = useState(0);
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        setIsLoading(true);
-        const fetchedQuestions = await assessmentApi.getQuestions();
-        setQuestions(fetchedQuestions);
-      } catch (err: any) {
-        setError(err.message || 'Failed to load questions. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchQuestions();
+    // MOCK DATA: Replace API call with detailed, realistic mock assessment questions
+    setIsLoading(true);
+    setTimeout(() => {
+      setQuestions([
+        {
+          id: 1,
+          question: 'How do you prefer to learn new topics?',
+          options: [
+            { value: 'visual', label: 'With diagrams, charts, and pictures', profile: 'visual-learner', icon: 'eye' },
+            { value: 'auditory', label: 'By listening to explanations or audio', profile: 'auditory-learner', icon: 'ear' },
+            { value: 'kinesthetic', label: 'By doing hands-on activities', profile: 'adhd', icon: 'hand' },
+            { value: 'reading', label: 'By reading text and books', profile: 'dyslexia', icon: 'book' },
+          ],
+        },
+        {
+          id: 2,
+          question: 'What helps you focus best during lessons?',
+          options: [
+            { value: 'breaks', label: 'Taking frequent breaks', profile: 'adhd', icon: 'clock' },
+            { value: 'structure', label: 'Having clear, step-by-step instructions', profile: 'autism', icon: 'list' },
+            { value: 'group', label: 'Working in groups or pairs', profile: 'social', icon: 'users' },
+            { value: 'quiet', label: 'A quiet environment', profile: 'visual-learner', icon: 'mute' },
+          ],
+        },
+        {
+          id: 3,
+          question: 'Which activity do you enjoy most in class?',
+          options: [
+            { value: 'experiments', label: 'Science experiments', profile: 'kinesthetic', icon: 'flask' },
+            { value: 'reading', label: 'Reading stories', profile: 'dyslexia', icon: 'book' },
+            { value: 'drawing', label: 'Drawing and coloring', profile: 'visual-learner', icon: 'paint' },
+            { value: 'listening', label: 'Listening to music or stories', profile: 'auditory-learner', icon: 'music' },
+          ],
+        },
+        // Add 10+ more questions with detailed, wordy options
+      ]);
+      setIsLoading(false);
+    }, 800);
   }, []);
 
   const progress = questions.length > 0 ? ((currentQuestion + 1) / questions.length) * 100 : 0;

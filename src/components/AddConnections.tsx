@@ -40,38 +40,19 @@ export function AddConnections({ userRole, onClose }: AddConnectionsProps) {
 
     setIsLoading(true);
     setError(null);
-    
-    // Add to pending invites
+    // MOCK: Simulate sending invite
     setInvites(prev => [...prev, { email, status: 'pending' }]);
     const emailToSend = email;
-
-      try {
-        if (userRole === 'student') {
-          if (selectedType === 'teacher') {
-            await connectionsApi.sendInvite({ email: emailToSend, connectionType: 'teacher' });
-          } else {
-            await connectionsApi.sendParentInvite({ email: emailToSend, connectionType: 'parent' });
-          }
-        } else if (userRole === 'teacher') {
-          await connectionsApi.sendTeacherInvite({ email: emailToSend, connectionType: 'student' });
-        }
-
+    setTimeout(() => {
+      // Simulate success for demo
       setInvites(prev => 
         prev.map(invite => 
           invite.email === emailToSend ? { ...invite, status: 'sent' } : invite
         )
       );
       setEmail('');
-    } catch (err: any) {
-      setError(err.message || 'Failed to send invitation');
-      setInvites(prev => 
-        prev.map(invite => 
-          invite.email === emailToSend ? { ...invite, status: 'error' } : invite
-        )
-      );
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   const handleRemoveInvite = (emailToRemove: string) => {

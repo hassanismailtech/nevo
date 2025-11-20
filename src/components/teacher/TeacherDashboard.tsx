@@ -28,6 +28,11 @@ export function TeacherDashboard() {
   const [selectedStudent, setSelectedStudent] = useState<StudentConnection | null>(null);
   const [encouragements, setEncouragements] = useState<{[id: string]: string[]}>({});
   const [leaderboardTab, setLeaderboardTab] = useState(false);
+  // --- Improved Student Details Modal State ---
+  const [detailsTab, setDetailsTab] = useState<'progress' | 'lessons' | 'encouragements' | 'profile'>('progress');
+  const [showEncModal, setShowEncModal] = useState(false);
+  const [encMessage, setEncMessage] = useState('');
+  const [encSuccess, setEncSuccess] = useState(false);
 
   useEffect(() => {
     // MOCK DATA: Replace API calls with detailed, realistic mock data
@@ -209,6 +214,7 @@ export function TeacherDashboard() {
     }
   };
 
+  // Handler to send encouragement (improved)
   const sendEncouragement = (studentId: string, message: string) => {
     setEncouragements(prev => {
       const updated = { ...prev };
@@ -216,6 +222,8 @@ export function TeacherDashboard() {
       updated[studentId].push(message);
       return updated;
     });
+    setEncSuccess(true);
+    setTimeout(() => setEncSuccess(false), 2000);
   };
 
   const downloadReport = () => {
@@ -620,7 +628,7 @@ export function TeacherDashboard() {
                         </div>
                         <div className="mt-4 flex gap-2">
                           <button onClick={() => setSelectedStudent(student)} className="text-[#4F46E5] underline">View Details</button>
-                          <button onClick={() => sendEncouragement(student.id, 'Keep up the great work!')} className="ml-2 text-[#059669] underline">Send Encouragement</button>
+                          <button onClick={() => { setSelectedStudent(student); setShowEncModal(true); }} className="ml-2 text-[#059669] underline">Send Encouragement</button>
                         </div>
                       </div>
                     ))}
@@ -654,21 +662,75 @@ export function TeacherDashboard() {
         {/* Student Details Modal */}
         {selectedStudent && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-2xl max-w-lg w-full relative">
+            <div className="bg-white p-8 rounded-2xl max-w-2xl w-full relative shadow-xl">
               <button onClick={() => setSelectedStudent(null)} className="absolute top-2 right-2 text-[#6B7280]">Close</button>
-              <h2 className="mb-4">{selectedStudent.name}'s Full Progress</h2>
-              <p><b>Email:</b> {selectedStudent.email}</p>
-              <p><b>Profile:</b> {selectedStudent.profile}</p>
-              <p><b>Progress:</b> {selectedStudent.progress}%</p>
-              <p><b>Lessons Completed:</b> {selectedStudent.lessonsCompleted}/{selectedStudent.totalLessons}</p>
-              <p><b>Last Active:</b> {selectedStudent.lastActive}</p>
-              <h3 className="mt-4 mb-2">Encouragements</h3>
-              <ul className="list-disc ml-6 text-[#059669]">
-                {(encouragements[selectedStudent.id] || []).map((msg, idx) => (
-                  <li key={idx}>{msg}</li>
-                ))}
-              </ul>
+              <h2 className="mb-4 text-2xl font-bold">{selectedStudent.name}'s Details</h2>
+              <div className="flex gap-4 mb-6">
+                <button onClick={() => setDetailsTab('progress')} className={`px-3 py-1 rounded ${detailsTab==='progress'?'bg-[#4F46E5] text-white':'bg-[#F3F4F6] text-[#4F46E5]'}`}>Progress</button>
+                <button onClick={() => setDetailsTab('lessons')} className={`px-3 py-1 rounded ${detailsTab==='lessons'?'bg-[#4F46E5] text-white':'bg-[#F3F4F6] text-[#4F46E5]'}`}>Lessons</button>
+                <button onClick={() => setDetailsTab('encouragements')} className={`px-3 py-1 rounded ${detailsTab==='encouragements'?'bg-[#4F46E5] text-white':'bg-[#F3F4F6] text-[#4F46E5]'}`}>Encouragements</button>
+                <button onClick={() => setDetailsTab('profile')} className={`px-3 py-1 rounded ${detailsTab==='profile'?'bg-[#4F46E5] text-white':'bg-[#F3F4F6] text-[#4F46E5]'}`}>Profile</button>
+              </div>
+              {detailsTab === 'progress' && (
+                <div>
+                  <h3 className="mb-2 font-semibold">Progress Overview</h3>
+                  <div className="mb-4">
+                    <span className="text-[#4F46E5] font-bold text-3xl">{selectedStudent.progress}%</span> overall
+                  </div>
+                  <div className="mb-4">
+                    <div className="h-4 bg-[#E5E7EB] rounded-full overflow-hidden">
+                      <div className="h-4 bg-[#4F46E5]" style={{ width: `${selectedStudent.progress}%` }}></div>
+                    </div>
+                  </div>
+                  <p className="text-[#6B7280]">{selectedStudent.name} has completed <b>{selectedStudent.lessonsCompleted}</b> out of <b>{selectedStudent.totalLessons}</b> lessons. Keep encouraging them to reach 100%!</p>
+                </div>
+              )}
+              {detailsTab === 'lessons' && (
+                <div>
+                  <h3 className="mb-2 font-semibold">Lesson History</h3>
+                  <ul className="list-disc ml-6">
+                    {/* Replace with real or mock lesson data */}
+                    <li>Introduction to Fractions - Completed</li>
+                    <li>Geometry Basics - In Progress</li>
+                    <li>Plant Life Cycles - Completed</li>
+                    <li>Reading Comprehension - In Progress</li>
+                    <li>Decimals & Percentages - Completed</li>
+                  </ul>
+                </div>
+              )}
+              {detailsTab === 'encouragements' && (
+                <div>
+                  <h3 className="mb-2 font-semibold">Encouragements</h3>
+                  <ul className="list-disc ml-6 text-[#059669]">
+                    {(encouragements[selectedStudent.id] || []).map((msg, idx) => (
+                      <li key={idx}>{msg}</li>
+                    ))}
+                  </ul>
+                  <button onClick={() => setShowEncModal(true)} className="mt-4 px-4 py-2 bg-[#4F46E5] text-white rounded">Send New Encouragement</button>
+                </div>
+              )}
+              {detailsTab === 'profile' && (
+                <div>
+                  <h3 className="mb-2 font-semibold">Profile</h3>
+                  <p><b>Name:</b> {selectedStudent.name}</p>
+                  <p><b>Email:</b> {selectedStudent.email}</p>
+                  <p><b>Profile:</b> {selectedStudent.profile}</p>
+                  <p><b>Last Active:</b> {selectedStudent.lastActive}</p>
+                </div>
+              )}
             </div>
+            {/* Encouragement Modal */}
+            {showEncModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-xl max-w-md w-full relative">
+                  <button onClick={() => setShowEncModal(false)} className="absolute top-2 right-2 text-[#6B7280]">Close</button>
+                  <h3 className="mb-4 font-bold">Send Encouragement to {selectedStudent.name}</h3>
+                  <textarea value={encMessage} onChange={e => setEncMessage(e.target.value)} className="w-full border rounded p-2 mb-4" rows={4} placeholder="Type your encouragement..." />
+                  <button onClick={() => { sendEncouragement(selectedStudent.id, encMessage); setEncMessage(''); setShowEncModal(false); }} className="px-4 py-2 bg-[#059669] text-white rounded">Send</button>
+                  {encSuccess && <div className="mt-2 text-[#059669]">Encouragement sent!</div>}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

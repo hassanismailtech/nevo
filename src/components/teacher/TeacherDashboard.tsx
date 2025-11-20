@@ -262,6 +262,8 @@ export function TeacherDashboard() {
                   <Label htmlFor="subject" className="text-[#111827]">Subject</Label>
                   <select
                     id="subject"
+                    title="Subject"
+                    aria-label="Subject"
                     className="w-full h-12 px-4 rounded-xl border border-[#E5E7EB] bg-white focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent disabled:opacity-50"
                     value={lessonSubject}
                     onChange={(e) => setLessonSubject(e.target.value)}

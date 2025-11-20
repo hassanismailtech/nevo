@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Brain, BookOpen, Trophy, Settings, LogOut, Sparkles, Clock, Target, TrendingUp, ArrowRight, UserPlus, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
-import { Badge } from '../ui/badge';
 import { AddConnections } from '../AddConnections';
 import { useAuthStore } from '../../stores/authStore';
 import { lessonsApi, type Lesson } from '../../api/lessons';
@@ -17,8 +16,8 @@ export function StudentDashboard() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [totalXP, setTotalXP] = useState(215);
-  const [streak, setStreak] = useState(7);
+  const [totalXP] = useState(215);
+  const [streak] = useState(7);
 
   useEffect(() => {
     const fetchData = async () => {

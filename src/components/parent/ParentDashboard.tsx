@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, LogOut, BookOpen, TrendingUp, Clock, Target, Sparkles, Heart, CheckCircle, Loader2 } from 'lucide-react';
+import { Trophy, LogOut, TrendingUp, Clock, Target, Sparkles, Heart, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { useAuthStore } from '../../stores/authStore';

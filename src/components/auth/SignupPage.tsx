@@ -170,6 +170,7 @@ export function SignupPage() {
                 <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF] pointer-events-none z-10" />
                 <select
                   id="role"
+                  title="Select your role" // Added title attribute for accessibility
                   className="w-full pl-12 pr-4 h-12 text-base rounded-xl border-2 border-gray-200 bg-white focus:outline-none focus:border-[#4F46E5] transition-colors appearance-none cursor-pointer disabled:opacity-50"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, ChevronLeft, CheckCircle, Sparkles, Loader2, AlertCircle } from 'lucide-react';
+import { ChevronRight, ChevronLeft, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { useAuthStore } from '../../stores/authStore';

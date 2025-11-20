@@ -45,18 +45,16 @@ export function AddConnections({ userRole, onClose }: AddConnectionsProps) {
     setInvites(prev => [...prev, { email, status: 'pending' }]);
     const emailToSend = email;
 
-    try {
-      let response;
-      
-      if (userRole === 'student') {
-        if (selectedType === 'teacher') {
-          response = await connectionsApi.sendInvite({ email: emailToSend, connectionType: 'teacher' });
-        } else {
-          response = await connectionsApi.sendParentInvite({ email: emailToSend, connectionType: 'parent' });
+      try {
+        if (userRole === 'student') {
+          if (selectedType === 'teacher') {
+            await connectionsApi.sendInvite({ email: emailToSend, connectionType: 'teacher' });
+          } else {
+            await connectionsApi.sendParentInvite({ email: emailToSend, connectionType: 'parent' });
+          }
+        } else if (userRole === 'teacher') {
+          await connectionsApi.sendTeacherInvite({ email: emailToSend, connectionType: 'student' });
         }
-      } else if (userRole === 'teacher') {
-        response = await connectionsApi.sendTeacherInvite({ email: emailToSend, connectionType: 'student' });
-      }
 
       setInvites(prev => 
         prev.map(invite => 
